@@ -2,32 +2,26 @@
   "name": "agnost",
   "version": "0.0.1",
   "description": "Utilities to help you write cleanly architected agnostic code",
+  "homepage": "https://youapt.github.io/agnost/",
+  "author": "vincent@youapt.eu",
+  "license": "MIT",
+  
   "main": "js/index.js",
   "typings": "js/index",
   "scripts": {
-    "prepare": "cd ts && tsc",
+    "prepare": "rm -rf js && cd ts && tsc",
     "pretest": "npm run prepare",
-    "test": "cd js && jest",
+    "test": "cd ts && jest",
     "prepublish": "npm run test",
     "typings": "cd ts && typings"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/basarat/ts-npm-module.git"
-  },
-  "keywords": [
-    "typescript",
-    "atom"
-  ],
-  "author": "basaratali@gmail.com",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/basarat/ts-npm-module/issues"
-  },
-  "homepage": "https://github.com/basarat/ts-npm-module#readme",
+  
   "devDependencies": {
     "jest-cli": "^15.0.2",
     "typescript": "^1.8.10",
     "typings": "^1.3.3"
+  },
+  "dependencies": {
+    "ts-jest": "^0.1.3"
   }
 }

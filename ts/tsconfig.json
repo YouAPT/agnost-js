@@ -1,7 +1,7 @@
 {
     "version": "0.1",
     "compilerOptions": {
-        "target": "es5",
+        "target": "es6",
         "module": "commonjs",
         "noImplicitAny": false,
         "removeComments": true,
@@ -9,7 +9,8 @@
         "preserveConstEnums": true,
         "declaration": true,
         "suppressImplicitAnyIndexErrors": true,
-        "outDir": "../js"
+        "outDir": "../js",
+        "sourceMap": true
     },
     "filesGlob": [
         "./**/*.ts",
