@@ -11,8 +11,11 @@ export interface AuthUser {
     isNew: boolean;
     id: string;
 }
+export interface LogoutRequestOptions {
+    id?: string;
+}
 export interface AuthClient {
     getLoggedInUser(): AuthUser;
     getLoginRequest(options: any): AuthRequest;
-    getLogoutRequest(): AuthRequest;
+    getLogoutRequest(options: LogoutRequestOptions): AuthRequest;
 }

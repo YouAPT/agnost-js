@@ -11,6 +11,16 @@ export declare class FakeAuthServer {
     private getUserData({provider, id});
     private setUserData({provider, id, data});
     hasUser(params: any): Promise<boolean>;
+    getUsers({provider}?: {
+        provider?: any;
+    }): {
+        provider: any;
+        id: string;
+    }[];
+    getUsersByProvider(provider: any): {
+        provider: any;
+        id: string;
+    }[];
     authenticate({provider, email}: {
         provider: any;
         email: any;
@@ -19,14 +29,19 @@ export declare class FakeAuthServer {
         id: string;
     }>;
 }
+export declare class FakeAuthClientSessionStore {
+    get: (key) => any;
+    set: (key, value) => void;
+}
+export declare class FakeAuthClientOptions {
+    sessionStore: FakeAuthClientSessionStore;
+    authServer: FakeAuthServer;
+}
 export declare class FakeAuthClient implements AuthClient {
     private sessionStore;
     private authServer;
     private user;
-    constructor({sessionStore, authServer}: {
-        sessionStore: any;
-        authServer: any;
-    });
+    constructor(options: FakeAuthClientOptions);
     getLoggedInUser(): AuthUser;
     getLoginRequest({provider, email}: {
         provider: any;
@@ -39,7 +54,9 @@ export declare class FakeAuthClient implements AuthClient {
             user: AuthUser;
         }>;
     };
-    getLogoutRequest(): {
+    getLogoutRequest({id}?: {
+        id?: any;
+    }): {
         next: {
             complete: boolean;
         };

@@ -14,8 +14,12 @@ export interface AuthUser {
    id : string;
 };
 
+export interface LogoutRequestOptions {
+    id? : string;
+}
+
 export interface AuthClient {
    getLoggedInUser() : AuthUser;
    getLoginRequest(options) : AuthRequest;
-   getLogoutRequest() : AuthRequest;
+   getLogoutRequest(options : LogoutRequestOptions) : AuthRequest;
 }
