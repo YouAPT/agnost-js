@@ -11,7 +11,7 @@
   "scripts": {
     "prepare": "rm -rf js && cd ts && tsc",
     "pretest": "npm run prepare",
-    "test": "cd ts && jest",
+    "test": "cd js && jest",
     "prepublish": "npm run test",
     "typings": "cd ts && typings"
   },
