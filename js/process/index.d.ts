@@ -6,4 +6,10 @@ export declare class SerialProcess {
     private _run({tracer}, ...args);
     run(...args: any[]): Promise<any[]>;
     trace(tracer: any, ...args: any[]): Promise<any[]>;
+    slice({at, from, toInclusive, toExclusive}: {
+        at?: any;
+        from?: any;
+        toInclusive?: any;
+        toExclusive?: any;
+    }): SerialProcess;
 }

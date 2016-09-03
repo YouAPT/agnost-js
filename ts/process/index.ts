@@ -46,4 +46,31 @@ export class SerialProcess {
   trace(tracer, ...args) {
     return this._run({tracer}, ...args);
   }
+  
+  slice({at = null, from = null, toInclusive = null, toExclusive = null}) : SerialProcess {
+    if (at) {
+      from = toInclusive = at;
+    }
+    
+    var steps = [];
+    var start = false;
+    var stop = false;
+    this.steps.forEach((step, index) => {
+      if (!from || step.name === from || index === from) {
+        start = true;
+      }
+      if (toExclusive && (step.name === toExclusive
+                         || (index === toExclusive))) {
+        stop = true;
+      }
+      if (start && !stop) {
+        steps.push(step);
+      }
+      if (toInclusive && ((step.name && step.name === toInclusive)
+                         || (index === toInclusive))) {
+        stop = true;
+      }
+    });
+    return new SerialProcess(steps);
+  }
 };

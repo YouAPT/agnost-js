@@ -108,4 +108,52 @@ it('can generate a trace of named nested process', () => __awaiter(this, void 0,
         { process: 'root', step: '', args: [3], result: 4 },
     ]);
 }));
+it('can run an inclusive range slice of a process', () => __awaiter(this, void 0, void 0, function* () {
+    const process = process_1.SerialProcess.named('root', [
+            () => 1,
+        process_1.SerialProcess.named('child', [
+            function first(prev) { return prev + 1; },
+                (prev) => prev + 1
+        ]),
+            (prev) => Promise.resolve(prev + 1),
+    ]);
+    const slice = process.slice({ from: 'child', toInclusive: 2 });
+    expect(yield slice.run(4)).toBe(7);
+}));
+it('can run an exclusive range slice of a process', () => __awaiter(this, void 0, void 0, function* () {
+    const process = process_1.SerialProcess.named('root', [
+            () => 1,
+        process_1.SerialProcess.named('child', [
+            function first(prev) { return prev + 1; },
+                (prev) => prev + 1
+        ]),
+            (prev) => Promise.resolve(prev + 1),
+    ]);
+    const slice = process.slice({ from: 0, toExclusive: 2 });
+    expect(yield slice.run()).toBe(3);
+}));
+it('can run an range of a process with only a start', () => __awaiter(this, void 0, void 0, function* () {
+    const process = process_1.SerialProcess.named('root', [
+            () => 1,
+        process_1.SerialProcess.named('child', [
+            function first(prev) { return prev + 1; },
+                (prev) => prev + 1
+        ]),
+            (prev) => Promise.resolve(prev + 1),
+    ]);
+    const slice = process.slice({ from: 1 });
+    expect(yield slice.run(5)).toBe(8);
+}));
+it('can run an slice at an index', () => __awaiter(this, void 0, void 0, function* () {
+    const process = process_1.SerialProcess.named('root', [
+            () => 1,
+        process_1.SerialProcess.named('child', [
+            function first(prev) { return prev + 1; },
+                (prev) => prev + 1
+        ]),
+            (prev) => Promise.resolve(prev + 1),
+    ]);
+    const slice = process.slice({ at: 'child' });
+    expect(yield slice.run(5)).toBe(7);
+}));
 //# sourceMappingURL=process.js.map

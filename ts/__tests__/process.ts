@@ -109,3 +109,55 @@ it('can generate a trace of named nested process', async () => {
   ]);
 });
 
+it('can run an inclusive range slice of a process', async () => {
+    const process = SerialProcess.named('root', [
+      () => 1,
+      SerialProcess.named('child', [
+          function first(prev) { return prev + 1 },
+          (prev) => prev + 1
+      ]),
+      (prev) => Promise.resolve(prev + 1),
+  ]);
+  const slice = process.slice({from: 'child', toInclusive: 2});
+  expect(await slice.run(4)).toBe(7);
+});
+
+it('can run an exclusive range slice of a process', async () => {
+    const process = SerialProcess.named('root', [
+      () => 1,
+      SerialProcess.named('child', [
+          function first(prev) { return prev + 1 },
+          (prev) => prev + 1
+      ]),
+      (prev) => Promise.resolve(prev + 1),
+  ]);
+  const slice = process.slice({from: 0, toExclusive: 2});
+  expect(await slice.run()).toBe(3);
+});
+
+it('can run an range of a process with only a start', async () => {
+    const process = SerialProcess.named('root', [
+      () => 1,
+      SerialProcess.named('child', [
+          function first(prev) { return prev + 1 },
+          (prev) => prev + 1
+      ]),
+      (prev) => Promise.resolve(prev + 1),
+  ]);
+  const slice = process.slice({from: 1});
+  expect(await slice.run(5)).toBe(8);
+});
+
+it('can run an slice at an index', async () => {
+    const process = SerialProcess.named('root', [
+      () => 1,
+      SerialProcess.named('child', [
+          function first(prev) { return prev + 1 },
+          (prev) => prev + 1
+      ]),
+      (prev) => Promise.resolve(prev + 1),
+  ]);
+  const slice = process.slice({at: 'child'});
+  expect(await slice.run(5)).toBe(7);
+});
+
