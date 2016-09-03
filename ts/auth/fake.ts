@@ -1,20 +1,57 @@
 import {AuthClient, AuthUser} from './';
 
+export interface FakeAuthServerProviderData {
+  [id : string] : any;
+}
+
+export interface FakeAuthServerData {
+  [provider : string] : FakeAuthServerProviderData;
+}
+
+export class FakeAuthServer {
+  constructor(private userDB : FakeAuthServerData = {}){
+  }
+  
+  private getUserData({provider, id}) {
+    return this.userDB[provider] && this.userDB[provider][id];
+  }
+  
+  private setUserData({provider, id, data}) {
+    if (!this.userDB[provider]) {
+        this.userDB[provider] = {};
+    }
+    this.userDB[provider][id] = data
+  }
+  
+  hasUser(params) {
+    return Promise.resolve(!!this.getUserData(params));
+  }
+  
+  authenticate({provider, email}) {
+    var user = {
+      isNew: !this.getUserData({provider, id: email}),
+      id: provider + ':' + email,
+    };
+    this.setUserData({provider, id: email, data: {}});
+    return Promise.resolve(user);
+  }
+};
+
 export class FakeAuthClient implements AuthClient {
   private sessionStore;
-  private userDB;
+  private authServer;
   private user : AuthUser;
   
-  constructor({sessionStore, userDB}){
+  constructor({sessionStore, authServer}){
     this.sessionStore = sessionStore;
-    this.userDB = userDB;
+    this.authServer = authServer;
     this.user = null;
     
     const userID = sessionStore.get('userID');
     if (userID) {
       this.user = {
         isNew: false,
-        id: userID.split(':')[1]
+        id: userID
       };
     }
   }
@@ -26,15 +63,11 @@ export class FakeAuthClient implements AuthClient {
   getLoginRequest({provider, email}) {
     return {
       next: {complete: true},
-      execute: () => {
-        this.user = {
-          isNew: !this.userDB.getUserData({provider, id: email}),
-          id: email,
-        };
-        this.sessionStore.set('userID', provider + ':' + email);
-        this.userDB.setUserData({provider, id: email, data: {}});
+      execute: async () => {
+        this.user = await this.authServer.authenticate({provider, email});
+        this.sessionStore.set('userID', this.user.id);
         
-        return Promise.resolve({user: this.user});
+        return {user: this.user};
       }
     };
   }

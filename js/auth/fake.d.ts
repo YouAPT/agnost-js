@@ -1,11 +1,31 @@
 import { AuthClient, AuthUser } from './';
+export interface FakeAuthServerProviderData {
+    [id: string]: any;
+}
+export interface FakeAuthServerData {
+    [provider: string]: FakeAuthServerProviderData;
+}
+export declare class FakeAuthServer {
+    private userDB;
+    constructor(userDB?: FakeAuthServerData);
+    private getUserData({provider, id});
+    private setUserData({provider, id, data});
+    hasUser(params: any): Promise<boolean>;
+    authenticate({provider, email}: {
+        provider: any;
+        email: any;
+    }): Promise<{
+        isNew: boolean;
+        id: string;
+    }>;
+}
 export declare class FakeAuthClient implements AuthClient {
     private sessionStore;
-    private userDB;
+    private authServer;
     private user;
-    constructor({sessionStore, userDB}: {
+    constructor({sessionStore, authServer}: {
         sessionStore: any;
-        userDB: any;
+        authServer: any;
     });
     getLoggedInUser(): AuthUser;
     getLoginRequest({provider, email}: {
