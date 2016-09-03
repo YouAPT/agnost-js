@@ -1,4 +1,4 @@
-import {SerialProcess} from '../';
+import {SerialProcess} from '../process';
 
 it('runs a simple asynchronous process', async () => {
   const process = new SerialProcess([
